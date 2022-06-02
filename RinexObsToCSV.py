@@ -49,27 +49,27 @@ numFields = 0
 # Parse the commnad line arguments
 argc = len(sys.argv)
 if argc < 2:
-	print "No arguments given, using default values"
+	print("No arguments given, using default values")
 
 else:
 	if sys.argv[1] == "-h" or sys.argv[1] == "--help": # help
-		print "RinexParser.py: Python utility for converting RINEX to CSV"
-		print "Usage:"
-		print "RinexParser.py [RINEX_File [CSV_File]] [-al] [-f Fields]"
-		print "  RINEX_File : Name of Rinex file"
-		print "  CSV_File   : Name of csv file, built from RINEX name if absent"
-		print "  -a         : Append to csv file"
-		print "  -l         : Legacy data only, supercedes -f"
-		print "  -f Fields  : List of rinex fields as specified"
-		print "    C => C/A code measurement"
-		print "    P => P code measurement"
-		print "    L => Carrier phase"
-		print "    D => Doppler"
-		print "    S => Carrier noise density (dB-Hz)"
-		print ""
-		print "    Numbers indicate the signal band (1 => L1, 2 => L2, 3 => L5)"
-		print "    P2 is the P code measurment on the L2 band in compliance with the RINEX"
-		print "    2.11 speccification."
+		print("RinexParser.py: Python utility for converting RINEX to CSV")
+		print("Usage:")
+		print("RinexParser.py [RINEX_File [CSV_File]] [-al] [-f Fields]")
+		print("  RINEX_File : Name of Rinex file")
+		print("  CSV_File   : Name of csv file, built from RINEX name if absent")
+		print("  -a         : Append to csv file")
+		print("  -l         : Legacy data only, supercedes -f")
+		print("  -f Fields  : List of rinex fields as specified")
+		print("    C => C/A code measurement")
+		print("    P => P code measurement")
+		print("    L => Carrier phase")
+		print("    D => Doppler")
+		print("    S => Carrier noise density (dB-Hz)")
+		print("")
+		print("    Numbers indicate the signal band (1 => L1, 2 => L2, 3 => L5)")
+		print("    P2 is the P code measurment on the L2 band in compliance with the RINEX")
+		print("    2.11 speccification.")
 		exit(0) 
 
 	rinFileName = sys.argv[1]
@@ -97,7 +97,7 @@ else:
 			writeMode = "a"
 
 		else:
-			print "Unknown argument: {}".format(sys.argv[i])
+			print(("Unknown argument: {}".format(sys.argv[i])))
 			exit(0)
 		i += 1
 	
@@ -109,7 +109,7 @@ currentLine = rinFile.readline()
 while currentLine[60:].rstrip() != "END OF HEADER":
 	if currentLine[60:].rstrip() == "# / TYPES OF OBSERV": # Extract header data
 		numFields = int(currentLine[1:6])
-		for j in range(numFields/9):
+		for j in range(int(numFields/9)):
 			for i in range(9):
 				rinFields.append(currentLine[(7+i*6):(12+i*6)].lstrip())
 			currentLine = rinFile.readline()
@@ -138,7 +138,7 @@ while currentLine != "":
 		# Parse the PRN values for this epoch
 		numSats = int(currentLine[30:32])
 		epochPRN = []
-		for j in range(numSats / 12):
+		for j in range(int(numSats / 12)):
 			for i in range(12):
 				epochPRN.append(currentLine[33+i*3:35+i*3])
 		for i in range(numSats % 12):
@@ -146,7 +146,7 @@ while currentLine != "":
 
 		for prn in epochPRN:
 			gpsRecord["prn"] = prn
-			for j in range(numFields / 5):
+			for j in range(int(numFields / 5)):
 				currentLine = rinFile.readline()
 				for i in range(5):
 					record = currentLine[i*16+1:i*16+14].lstrip()
@@ -158,9 +158,9 @@ while currentLine != "":
 			for i in range(numFields % 5):
 				record = currentLine[i*16+1:i*16+14].lstrip()
 				if record == "":
-					gpsRecord[rinFields[numFields/5*5+i]] = "0"
+					gpsRecord[rinFields[int((numFields/5*5+i)-2)]] = "0"
 				else:
-					gpsRecord[rinFields[numFields/5*5+i]] = record
+					gpsRecord[rinFields[int((numFields/5*5+i)-2)]] = record
 
 			csvLine = ""
 			for field in csvFields:

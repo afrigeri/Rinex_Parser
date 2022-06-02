@@ -35,7 +35,7 @@ Doppler measurements Hertz, and SNR.  The measurements for each frequency band
 are specified using the two character codes (`C1`, `S5`, etc) specified in 
 section 10.1.1 and Table A.1 of the 
 [RINEX 2.11 specification](https://igscb.jpl.nasa.gov/igscb/data/format/rinex211.txt).
-This script requires Python 2.7.
+This script runs with Python 3.
 
 `python RinexObsToCSV.py [Rinex_File [CSV_File]] [-al] [-f Fields]`
 - `Rinex_File`: RINEX observation file (`.??o` extension)
